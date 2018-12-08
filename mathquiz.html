@@ -1,0 +1,773 @@
+<html>
+<body>
+	<meta charset="utf-8"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>  
+<script src="underscore-min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <script src="flipclock.min.js"></script>
+  <script src="underscore-min.js"></script>
+  <link rel="stylesheet" href="flipclock.css">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<head>
+<title>MathQuiz</title>
+</head>
+<body style="background-color: #282923;transition:.3s ease all;">
+
+<nav class="navbar navbar-inverse" >
+  <div class="container-fluid">
+    <div class="navbar-header">
+    </div>
+    <ul class="nav navbar-nav">
+      <li style="background-color: red;max-width:270px;margin-left:-20px;"><a href="palaute.html" style="color:black;">Raportoi bugi/Anna palautetta</a></li>
+      <li style="background-color: red;max-width:270px;margin-left:340px;"><button id="bot">BOT</button></li>
+      </ul>
+      
+    <div class="dropdown" style="float:right;">
+      <button class="dropbtn" style="max-width:160px;">Muut pelit</button>
+      <div class="dropdown-content">
+        <a id="flagquiz"  style="color:black;background-color:yellow;" href="flagquiz_finnish.html">Lippupeli</a>
+        <a href="lotto.html" style="color:black;background-color:orange;">Gambling</a>
+        <a id="pokemoncarddatabase" style="color:black;background-color:lightgreen;" href="index.php">Pokémon</a>
+        <a id="englishquiz"  style="color:black;background-color:lightblue;" href="englishquiz.html">English Quiz</a>
+        <a id="japanesequiz"  style="color:black;background-color:yellow;" href="hiragana.php">Japanese Quiz</a>
+        <a id="pokemonquizalternate"  style="color:black;background-color:pink;" href="pokemonquizalternate.html">Pokemon Quiz Alternate</a>
+        <a id="mathquiz"  style="color:black;background-color:coral;" href="mathquiz.html">Math Quiz</a>
+        <a id="flagdragquizfinnish"  style="color:black;background-color:coral;" href="flagdragquizfinnish.html">FlagDragQuiz</a>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="container">
+ <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" style="position: absolute;margin-top:-20px;margin-left:-20%;">TULOKSET</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog" >
+    <div class="modal-dialog" >
+    
+      <!-- Modal content-->
+      <div class="modal-content" style="height:90%">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" style="position:absolute;top:11px;right:16px;">&times;</button>
+         <!-- <button id="asd3" style="transform: scale(0.4);position: absolute;font-size:1.9em;margin-top:-30px;margin-left:215px;">Lajittele päivämäärän mukaan</button>-->
+        </div>
+        <div class="modal-body">
+          <div id="tableid"  style="overflow: auto;max-height: 870px;text-align:center;">
+
+                <span style="font-size:2em;">MATHQUIZIN TULOKSET</span>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr><th>Nimi</th>
+                        <th>Easy</th>
+                        <th>Medium</th>
+                        <th>Hard</th></tr>
+                    </thead>
+                    <tbody>
+
+
+                    </tbody>    
+                </table>    
+            </div> 
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+<!--<button id="debug" style="position: absolute;">debug</button>-->
+  <button id="showeasy" style="width:150px;height:30px;position: absolute;left:10%;top:20%;display: none;">START QUIZ</button>
+  <span style="position: absolute;color:white;font-size:25px;margin-left:-8%">EASY</span>
+  <span style="position: absolute;color:white;font-size:25px;margin-left:11%">MEDIUM</span>
+  <span style="position: absolute;color:white;font-size:25px;margin-left:32%">HARD</span>
+  <div id="timer" style="margin-left:-35%;transform: scale(0.7);margin-top:2%;"></div>
+  <div id="timer2" style="margin-left:-1%;transform: scale(0.7);margin-top:-10%;"></div>
+  <div id="timer3" style="margin-left:33%;transform: scale(0.7);margin-top:-10%;"></div>
+  <div id="easy" style="position: absolute;top:30%;left:10%;display:none;">
+    
+    <div id="numbereasy" style="display:inline;font-size:3em;"></div> <span style="font-size:3em;" id="easyoperator">+</span>
+    <input type="text" id="uservaleasy" style="width:60px;display:inline;height:50px;font-size:3em;" > <span style="font-size:3em;">=</span>
+    <div id="totaleasy" style="display:inline;font-size:3em;"></div>
+    <div id="oikeineasy" style="font-size:3em;"><span style='color:lightgreen'>Oikein: 0/10</span></div>
+  </div>
+
+  <button id="showmedium" style="width:150px;height:30px;position: absolute;left:30%;top:20%;" disabled hidden>MEDIUM</button>
+  <div id="medium" style="position: absolute;top:30%;left:30%;display:none;">
+    <div id="numbermedium" style="display:inline;font-size:3em;"></div> <span style="font-size:3em;">+</span>
+    <input type="text" id="uservalmedium" style="width:60px;display:inline;height:50px;font-size:3em;"> <span style="font-size:3em;">=</span>
+    <div id="totalmedium" style="display:inline;font-size:3em;"></div>
+    <div id="oikeinmedium" style="font-size:3em;"><span style='color:lightgreen'>Oikein: 0/10</span></div>
+  </div>
+
+  <button id="showhard" style="width:150px;height:30px;position: absolute;left:50%;top:20%;" disabled hidden>HARD</button>
+  <div id="hard" style="position: absolute;top:30%;left:50%;display:none;">
+    <div id="numberhard" style="display:inline;font-size:3em;"></div> <span style="font-size:3em;">+</span>
+    <input type="text" id="uservalhard" style="width:80px;display:inline;height:50px;font-size:3em;"> <span style="font-size:3em;">=</span>
+    <div id="totalhard" style="display:inline;font-size:3em;"></div>
+    <div id="oikeinhard" style="font-size:3em;"><span style='color:lightgreen'>Oikein: 0/10</span></div>
+  </div>
+
+</div>  
+
+<form method="POST" action="savemathquiz.php" class="ajax">
+<div style="margin-top:10%">
+  <input type="text" name="nimi" id="nimi" placeholder="Nimi" autocomplete="off" style="position: absolute;top:0px;left:15%;height:50px;"/>
+  <input type="text" id="time1here" name="time1here" hidden required/>
+  <input type="text" id="time2here" name="time2here" hidden/>
+  <input type="text" id="time3here" name="time3here" hidden/>
+  <input class="btn btn-success" type="submit" name="send" id="send" value="Jatka" class="send" style="display:none;width:150px;height:70px;font-size:1.5em;position: absolute;top:50%;left:45%;">
+</div>
+
+</form> 
+<div id="footer" style="margin:0;bottom:0;width: 100%;background-color: #12391A;height:50px;position: fixed;">
+    <span style='color:white;position: relative;float: left;top: 50%;left: 50%;'>© Riku.
+      </span>
+      <span style='color:white;position: absolute;float: right;bottom: 0;right: 5px;'>Beta Version 0.2
+      </span>
+</div>
+
+<script>
+
+  var colors = ["red", "lightgreen", "lightblue", "yellow", "orange", "cyan", "magenta", "coral", "pink"];
+
+var randomcolor = colors[Math.floor(Math.random() * colors.length)];
+
+$(".dropdown-content").each(function(){
+var randomcolor = colors[Math.floor(Math.random() * colors.length)];
+
+$(this).children().css("background-color",""+ randomcolor +"");
+})
+$(document).ready(function(){
+
+$("#bot").click(function(){
+
+  $("#nimi").val("BOT");
+  $("#nimi").css("visibility", "hidden");
+  setInterval(function(){
+  $("#time1here").val("00:03");
+  $("#time2here").val("00:03");
+  $("#time3here").val("00:03");
+
+  })
+
+ // $("#nimi").prop("disabled", true);
+  clockeasy.start();
+
+  $("#easy").show();
+
+
+
+   
+
+
+
+  setInterval(function(){
+
+      var easyfirst = parseInt($("#numbereasy").text());
+      var easysecond = parseInt($("#totaleasy").text());
+
+      var combinedeasy = easysecond - easyfirst;
+
+      $("#uservaleasy").val(combinedeasy);
+
+       if(oikeineasy == 10)
+      {
+        $("#uservalhard").val("");
+        $("#uservalhard").val("");
+
+      var mediumfirst = parseInt($("#numbermedium").text());
+      var mediumsecond = parseInt($("#totalmedium").text());
+
+      var combinedmedium = mediumsecond - mediumfirst;
+
+      $("#uservalmedium").val(combinedmedium);
+
+      }
+
+       if(oikeinmedium == 10)
+      {
+      
+
+      var hardfirst = parseInt($("#numberhard").text());
+      var hardsecond = parseInt($("#totalhard").text());
+
+      var combinedhard = hardsecond - hardfirst;
+
+      $("#uservalhard").val(combinedhard);
+      }
+      if(oikeinhard == 10)
+      {
+        setTimeout(function(){
+            $("#send").click();
+
+        },150)
+         
+      }
+
+  },300)
+
+
+
+})
+
+setInterval(function(){
+
+  if($("#nimi").val().length < 3)
+  {
+    $("#showeasy").hide();
+    
+  }
+  if($("#nimi").val().length > 3)
+  {
+    $("#showeasy").show();
+  }
+
+},20)
+
+var clockeasy;
+clockeasy = $('#timer').FlipClock({
+    autoStart : false
+
+})
+
+var clockmedium;
+clockmedium = $('#timer2').FlipClock({
+    autoStart : false
+
+})
+
+var clockhard;
+clockhard = $('#timer3').FlipClock({
+    autoStart : false
+
+})
+
+
+
+$("#showeasy").click(function(){
+  $("#bot").hide();
+  $("#medium").hide();
+  $("#easy").show();
+  $("#hard").hide();
+  $("#elite").hide();
+  clockeasy.start();
+  $("#uservaleasy").focus();
+
+  setInterval(function(){
+
+   var easyclocktime =  clockeasy.time.getMinuteCounter();
+
+      $("#time1here").val(easyclocktime[2] + easyclocktime[3] + ":" + easyclocktime[4] + (easyclocktime[5] - 1));
+
+},1000)
+
+})
+
+
+/*var operatorarray = ['*', '-', '/', '+'];
+
+var randomoperator = operatorarray[Math.floor(Math.random()* operatorarray.length)]
+
+var operators = {
+    '+': function(a, b) { return a + b },
+    '-': function(a, b) { return a - b },
+    '*': function(a, b) { return a * b },
+    '/': function(a, b) { return a / b },
+     // ...
+};
+
+var op = randomoperator;
+console.log(operators[op](10, 20));
+
+
+$("#easyoperator").html(randomoperator)*/
+//EASY/////////////////////////////////
+  var randomnumber = Math.floor(Math.random() * 10)+1;
+$("#numbereasy").html(randomnumber);
+ randomnumber = Math.floor(Math.random() * 10)+1;
+$("#totaleasy").html(randomnumber);
+
+  setInterval(function(){
+
+  var userval = $("#uservaleasy").val();
+  var number = parseInt($("#numbereasy").text());
+  var total = parseInt($("#totaleasy").text());
+
+  if(total < number)
+  {
+    randomnumber = Math.floor(Math.random() * 10)+1;
+      $("#numbereasy").html(randomnumber);
+      randomnumber = Math.floor(Math.random() * 10)+1;
+      $("#totaleasy").html(randomnumber);
+     // $("#userval").val("-");
+     //$("#uservaleasy").prop('disabled', true);
+  }
+  else
+  {
+    $("#uservaleasy").prop('disabled', false);
+    
+  }
+
+},100)
+
+var oikeineasy = 0;
+setInterval(function(){
+var userval = $("#uservaleasy").val();
+var number = parseInt($("#numbereasy").text());
+  
+
+  var total = parseInt($("#totaleasy").text());
+
+  var combination = ((number * 1) + (userval * 1));
+
+
+  if(combination == total)
+  {
+    oikeineasy++;
+      randomnumber = Math.floor(Math.random() * 10)+1;
+      $("#numbereasy").html(randomnumber);
+      randomnumber = Math.floor(Math.random() * 10)+1;
+      $("#totaleasy").html(randomnumber);
+      $("#uservaleasy").val("");
+      $("#oikeineasy").html("<span style='color:lightgreen'>Oikein: " + oikeineasy + "/10</span>");
+      $("#uservaleasy").focus();
+  }
+   if(oikeineasy == 10)
+  {
+    clockeasy.stop();
+    $("#showmedium").show();
+    $("#showmedium").hide();
+      $("#showmedium").prop('disabled', false);
+      setTimeout(function(){
+          $("#showmedium").click();
+      },100)
+
+      $("#easy").remove();
+      $("#showeasy").remove();
+
+  }
+ 
+
+},300)
+
+
+  //MEDIUM/////////////////////////////////
+$("#showmedium").click(function(){
+  $("#medium").show();
+  $("#easy").hide();
+  $("#hard").hide();
+  $("#elite").hide();
+  clockmedium.start();
+  $("#uservalmedium").focus();
+setInterval(function(){
+
+   var mediumclocktime =  clockmedium.time.getMinuteCounter();
+
+      $("#time2here").val(mediumclocktime[2] + mediumclocktime[3] + ":" + mediumclocktime[4] + (mediumclocktime[5] - 1));
+      
+},1000)
+
+})
+
+
+   var randomnumber = Math.floor(Math.random() * 90)+10;
+$("#numbermedium").html(randomnumber);
+ randomnumber = Math.floor(Math.random() * 90)+10;
+$("#totalmedium").html(randomnumber);
+
+  setInterval(function(){
+
+  var userval = $("#uservalmedium").val();
+  var number = parseInt($("#numbermedium").text());
+  var total = parseInt($("#totalmedium").text());
+
+  if(total <= number)
+  {
+    randomnumber = Math.floor(Math.random() * 90)+10;
+      $("#numbermedium").html(randomnumber);
+      randomnumber = Math.floor(Math.random() * 90)+10;
+      $("#totalmedium").html(randomnumber);
+     // $("#userval").val("-");
+     //$("#uservalmedium").prop('disabled', true);
+
+  }
+  else
+  {
+    $("#uservalmedium").prop('disabled', false);
+  }
+
+},300)
+
+var oikeinmedium = 0;
+setInterval(function(){
+var userval = $("#uservalmedium").val();
+var number = parseInt($("#numbermedium").text());
+  
+
+  var total = parseInt($("#totalmedium").text());
+
+  var combination = ((number * 1) + (userval * 1));
+
+
+  if(combination == total)
+  {
+    oikeinmedium++;
+      randomnumber = Math.floor(Math.random() * 90)+10;
+      $("#numbermedium").html(randomnumber);
+      randomnumber = Math.floor(Math.random() * 90)+10;
+      $("#totalmedium").html(randomnumber);
+      $("#uservalmedium").val("");
+      $("#oikeinmedium").html("<span style='color:lightgreen'>Oikein: " + oikeinmedium + "/10</span>");
+      $("#uservalmedium").focus();
+  }
+  if(oikeinmedium == 10)
+  {
+    clockmedium.stop();
+    $("#showhard").show();
+    $("#showhard").hide();
+      $("#showhard").prop('disabled', false);
+      setTimeout(function(){
+          $("#showhard").click();
+      },100)
+
+      $("#medium").remove();
+      $("#showmedium").remove();
+
+
+  }
+
+},1)
+
+  //HARD/////////////////////////////////
+$("#showhard").click(function(){
+  $("#hard").show();
+  $("#easy").hide();
+  $("#medium").hide();
+  $("#elite").hide();
+  clockhard.start();
+  $("#uservalhard").focus();
+
+setInterval(function(){
+
+   var hardclocktime =  clockhard.time.getMinuteCounter();
+
+      $("#time3here").val(hardclocktime[2] + hardclocktime[3] + ":" + hardclocktime[4] + (hardclocktime[5] - 1));
+      
+},1000)
+
+})
+
+
+   var randomnumber = Math.floor(Math.random() * 900)+100;
+$("#numberhard").html(randomnumber);
+ randomnumber = Math.floor(Math.random() * 900)+100;
+$("#totalhard").html(randomnumber);
+
+  setInterval(function(){
+
+  var userval = $("#uservalhard").val();
+  var number = parseInt($("#numberhard").text());
+  var total = parseInt($("#totalhard").text());
+
+  if(total <= number)
+  {
+    randomnumber = Math.floor(Math.random() * 900)+100;
+      $("#numberhard").html(randomnumber);
+      randomnumber = Math.floor(Math.random() * 900)+100;
+      $("#totalhard").html(randomnumber);
+     // $("#userval").val("-");
+    // $("#uservalhard").prop('disabled', true);
+  }
+  else
+  {
+    $("#uservalhard").prop('disabled', false);
+  }
+
+},300)
+
+var oikeinhard = 0;
+setInterval(function(){
+var userval = $("#uservalhard").val();
+var number = parseInt($("#numberhard").text());
+  
+
+  var total = parseInt($("#totalhard").text());
+
+  var combination = ((number * 1) + (userval * 1));
+
+
+  if(combination == total)
+  {
+    oikeinhard++;
+      randomnumber = Math.floor(Math.random() * 900)+100;
+      $("#numberhard").html(randomnumber);
+      randomnumber = Math.floor(Math.random() * 900)+100;
+      $("#totalhard").html(randomnumber);
+      $("#uservalhard").val("");
+      $("#oikeinhard").html("<span style='color:lightgreen'>Oikein: " + oikeinhard + "/10</span>");
+      $("#uservalhard").focus();
+  }
+  if(oikeinhard == 10)
+  {
+    clockhard.stop();
+      $("#showmhard").prop('disabled', false);
+      setTimeout(function(){
+          $("#showhard").click();
+      },100)
+
+      $("#hard").remove();
+      $("#showhard").remove();
+      $("#send").show();
+
+  }
+
+},1)
+
+
+$("#numbereasy").css("color", "white");
+$("#numbereasy").next().css("color", "white");
+
+
+$("#totaleasy").css("color", "white");
+$("#totaleasy").prev().css("color", "white");
+
+$("#numbermedium").css("color", "white");
+$("#numbermedium").next().css("color", "white");
+
+
+$("#totalmedium").css("color", "white");
+$("#totalmedium").prev().css("color", "white");
+
+
+$("#numberhard").css("color", "white");
+$("#numberhard").next().css("color", "white");
+
+
+$("#totalhard").css("color", "white");
+$("#totalhard").prev().css("color", "white");
+
+
+
+    $('.flip-clock-label').remove();
+    $('#timer ul:first').remove();
+    $('#timer ul:eq(0)').remove();
+    $('.minutes').remove();
+
+    $('#timer2 ul:first').remove();
+    $('#timer2 ul:eq(0)').remove();
+
+    $('#timer3 ul:first').remove();
+    $('#timer3 ul:eq(0)').remove();
+
+/*var minutesLabel = document.getElementById("minutes");
+var secondsLabel = document.getElementById("seconds");
+var totalSeconds = 0;*/
+
+/*$(document).ready(function(){
+
+    clock.setTime(0);
+})
+var counter = 55;
+
+function StartTimer() 
+{
+  setInterval(setTime, 1000);
+}
+
+var dime = 0;
+
+
+function setTime() {
+  ++totalSeconds;
+  secondsLabel = pad(totalSeconds % 60);
+  minutesLabel = pad(parseInt(totalSeconds / 60));
+
+  counter++
+   
+
+        $("#time1here").val("00:0" + counter);
+
+        if(counter >= 10 && counter <= 59)
+        {
+          $("#time1here").val("00:" + counter);
+        }
+        if(counter >= 60 && counter <= 70)
+        {
+          counter = 0;
+          $("#time1here").val("01:0" + counter);
+        }
+        if(counter >= 70 && counter <= 120)
+        {
+          $("#time1here").val("01:0" + counter);
+        }
+        if(counter >= 120 && counter <= 130)
+        {
+          counter = 0;
+          $("#time1here").val("02:0" + counter);
+        }
+        if(counter >= 130 && counter <= 180)
+        {
+          $("#time1here").val("02:" + counter);
+        }
+         if(counter >= 180 && counter <= 190)
+        {
+          counter = 0;
+          $("#time1here").val("03:0" + counter);
+        }
+        if(counter >= 190 && counter <= 240)
+        {
+          $("#time1here").val("03:" + counter);
+        }
+
+
+
+}
+
+function pad(val) {
+  var valString = val + "";
+  if (valString.length < 2) {
+    return "0" + valString;
+  } else {
+    return valString;
+  }
+}
+*/
+$.getJSON('mathquizhighscores.json', function(data) {
+
+var data = _.sortBy(data.highscores, 'Prosentti');
+
+var descending = data.reverse(); 
+
+              $.each(descending, function(index, element) {
+   
+                      $('table tbody').append('<tr>');
+                          $('table tbody').append('<td style="-moz-user-select: none;">' + element.nimi + '</td>');
+                          $('table tbody').append('<td style="-moz-user-select: none;">' + element.easy + '</td>');
+                          $('table tbody').append('<td style="-moz-user-select: none;">' + element.medium + '</td>');
+                          $('table tbody').append('<td style="-moz-user-select: none;">' + element.hard + '</td>');
+                      $('table tbody').append('</tr>');
+              });
+
+
+              setTimeout(function(){
+$("td:eq(0)").css("border", "3px solid #FFDF00");
+$("td:eq(1)").css("border", "3px solid #FFDF00");
+$("td:eq(2)").css("border", "3px solid #FFDF00");
+$("td:eq(3)").css("border", "3px solid #FFDF00");
+
+$("td:eq(4)").css("border", "3px solid #C0C0C0");
+$("td:eq(5)").css("border", "3px solid #C0C0C0");
+$("td:eq(6)").css("border", "3px solid #C0C0C0");
+$("td:eq(7)").css("border", "3px solid #C0C0C0");
+
+$("td:eq(8)").css("border", "3px solid #CD7F32");
+$("td:eq(9)").css("border", "3px solid #CD7F32");
+$("td:eq(10)").css("border", "3px solid #CD7F32");
+$("td:eq(11)").css("border", "3px solid #CD7F32");
+
+
+},50)
+          });
+
+$("form.ajax").on('submit', function(){
+
+        var that = $(this),
+        url = that.attr('action'),
+        method = that.attr("method"),
+        data = {};
+
+        that.find('name').each(function(){
+          var that = $(this),
+              name = that.attr('name'),
+              value = that.val();
+
+          data[name] = value;
+              
+
+        })
+        $.ajax({
+            url: url,
+            type: type,
+            data: data,
+            success: function(response){
+                console.log(response);
+              }
+        })
+
+
+        return false;
+        });
+});
+
+
+$("#nimi").keypress(function(event){
+
+
+    if (event.key === "Enter") {
+        $("#showeasy").click();
+    }
+
+})
+
+</script>
+<style>
+td{
+border:2px solid grey;
+padding:5px;
+border-style: solid;
+border-spacing: 5px 15px;
+
+}
+td::before{
+      position: absolute;
+  border-radius: 50%;
+  width: 5000%;
+  height: 5000%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index:-1;
+}
+table{
+        
+        border-collapse: separate;
+}
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+border-bottom: 1px solid black;
+}
+.dropdown-content a:hover {opacity:0.7;}
+.dropdown:hover .dropdown-content {display: block;}
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+</style>
+</body>
